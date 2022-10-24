@@ -39,6 +39,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     res
       .status(200)
       .send(
-        `Hello! Your username2 is ${user.displayName} and the current channel is ${channel.displayName}.`
+        `Hello! Your username3 is ${user.displayName} and the current channel is ${channel.displayName}. anmd you send $(query) `
       );
   }
