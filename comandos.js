@@ -121,3 +121,36 @@ $(eval  var res="$(user) dejará este mundo el próximo "; const w=['Lunes','Mar
 // F_sub
 $(eval  var res="$(query) dejará este mundo el próximo "; const w=['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo']; const num="$(urlfetch https://beta.decapi.me/random/number/0/6)"; res+=w[num]+"😭😭😭"; res;)
 
+// !teCambio un semaforo
+$(eval
+var r = [
+    'WOW tienes $(query)😍! Yo también',
+    'Ijole, eso ahorita no anda valiendo mucho:(',
+    'Podrías llevar tu $(query) al basurero, quizás ahi te den algo',
+    '$(query) no es de gran valor...',
+    'Si no tienes nada mejor que $(query)',
+    'Enserio $(user)😑? Me estas intendando vender $(query)?',
+    'OMG tienes $(query)🫣 Te lo cambio por 5 diamantes!!',
+    'Siempre quise $(query)😍 Te daré un Tesla por ello',
+    'Mmm por $(query) te podría dar un pañal',
+    'Te cambio $(query) por 100$ DLS',
+    'Por $(query) te podría dar una paleta',
+    'Aceptarías $(query) por $(query)?',
+    '$(user) vuelve cunado tengas algo interesante',
+]; r[Math.floor(Math.random() * r.length)];)
+$(eval var r=['WOW tienes $(query)! Yo también','$(query) no es de gran valor...','Si no tienes nada mejor que $(query)','Really $(user)? Me intentas vender $(query)?','OMG $(query), Te lo cambio por 5 💎!!','Siempre quise $(query) Te daré un Tesla a cambio','Mmm por $(query) te podría dar un pañal','Te cambio $(query) por 100$ DLS','Por $(query) te podría dar una paleta','Aceptarías $(query) por $(query)?','$(user) vuelve cuando tengas algo interesante']; r[Math.floor(Math.random()*r.length)];)
+
+
+
+
+
+
+// TEST
+$(eval
+    const response = "$(urlfetch https://v2.jokeapi.dev/joke/Any?lang=es)";
+    // if(response.joke){
+    //     var res=response.joke;
+    // }else{
+    //     var res=response.setup +" "+response.delivery;
+    // }
+    JSON.stringify(response);)
