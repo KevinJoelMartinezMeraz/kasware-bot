@@ -41,7 +41,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       req.headers['nightbot-channel'] as string
       );
     const query=parseMessage(
-      req.headers['Content-Type'] as string
+      req.headers['nightbot-response-url'] as string
     );
     // console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", req.headers)
     // console.log('[content-Type]',req.headers['content-type']);
@@ -52,7 +52,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     res.status(200)
       .send(
-        `${r.slice(0,398)}?`
+        `You send ${query}?`
         );
 }
       
