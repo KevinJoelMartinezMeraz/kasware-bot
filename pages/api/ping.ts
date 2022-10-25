@@ -51,7 +51,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   
     res.status(200)
       .send(
-        `HOLA tu mandaste3 ${query}?`
+        `HOLA tu mandaste3 ${JSON.stringify(req.headers)}?`
         );
 }
       
