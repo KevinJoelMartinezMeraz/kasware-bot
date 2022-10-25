@@ -24,33 +24,15 @@ const parseNightbotUser = (userParams: string) => {
         userLevel: params.get('userLevel')
     };
 };
-const parseMessage = (userParams: string) => {
-    const params = new URLSearchParams(userParams);
-    const res= Object.entries(params);
-    console.log("🚀 ~ file: ping.ts ~ URLSearchParams", res)
 
-    return res;
-};
-
-// export default async function (req: NextApiRequest, res: NextApiResponse) {
-//   res.status(200).send('Hello!');
-// }
-
-// `Hello! Your username3 is ${user.displayName} and the current channel is ${channel.displayName}. anmd you send $(query) `
+// 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     const channel = parseNightbotChannel(
       req.headers['nightbot-channel'] as string
       );
-    const query=parseMessage(
-      req.headers['nightbot-response-url'] as string
-    );
-    
+    const query=req.query.value;
 
-    const head=req.query.value
-    console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", head)
-    // console.log('[content-Type]',req.headers['content-type']);
-    
     res.status(200)
-      .send('Tu mandaste '+head);
+      .send(`Hello! Your username3 is ${user.displayName} and the current channel is ${channel.displayName}. anmd you send $(query) `);
 }
       
