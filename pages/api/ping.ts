@@ -26,6 +26,7 @@ const parseNightbotUser = (userParams: string) => {
 };
 const parseMessage = (userParams: string) => {
     const params = new URLSearchParams(userParams);
+    // console.log("🚀 ~ file: ping.ts ~ URLSearchParams", params)
 
     return params.get('message');
 };
@@ -39,17 +40,18 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const channel = parseNightbotChannel(
       req.headers['nightbot-channel'] as string
       );
-      const query=parseMessage(
-      req.headers['nightbot-response-url'] as string
-
+    const query=parseMessage(
+      req.headers['content-type'] as string
     );
-    console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", req)
+    // console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", req.headers)
+    // console.log('[content-Type]',req.headers['content-type']);
+    
   
     const user = parseNightbotUser(req.headers['nightbot-user'] as string);
   
     res.status(200)
       .send(
-        `HOLA tu mandaste ${query}?`
+        `HOLA tu mandaste2 ${query}?`
         );
 }
       
