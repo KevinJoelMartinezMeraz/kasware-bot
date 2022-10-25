@@ -29,16 +29,19 @@ const parseNightbotUser = (userParams: string) => {
 //   res.status(200).send('Hello!');
 // }
 
+// `Hello! Your username3 is ${user.displayName} and the current channel is ${channel.displayName}. anmd you send $(query) `
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     const channel = parseNightbotChannel(
       req.headers['nightbot-channel'] as string
     );
+    // const query=req.query;
+    console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", req)
   
     const user = parseNightbotUser(req.headers['nightbot-user'] as string);
   
-    res
-      .status(200)
+    res.status(200)
       .send(
-        `Hello! Your username3 is ${user.displayName} and the current channel is ${channel.displayName}. anmd you send $(query) `
-      );
-  }
+        `HOLA tu mandaste ${req.body.query}?`
+        );
+}
+      
