@@ -26,9 +26,10 @@ const parseNightbotUser = (userParams: string) => {
 };
 const parseMessage = (userParams: string) => {
     const params = new URLSearchParams(userParams);
-    // console.log("🚀 ~ file: ping.ts ~ URLSearchParams", params)
+    const res= Object.entries(params);
+    console.log("🚀 ~ file: ping.ts ~ URLSearchParams", res)
 
-    return params.get('message');
+    return res;
 };
 
 // export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -41,19 +42,21 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       req.headers['nightbot-channel'] as string
       );
     const query=parseMessage(
-      req['body'] as string
+      req.headers['nightbot-response-url'] as string
     );
-    const body=req.body['message']
+    const resParam= Object.entries(req.headers['nightbot-response-url']);
+    const headerUrl=req.headers['nightbot-response-url'] as string;
+    // console.log("🚀 ~ file: ping.ts ~ URLSearchParams", )
+
+    const head=Object.entries(req.headers)
     // console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", req.headers)
     // console.log('[content-Type]',req.headers['content-type']);
     
   
     const user = parseNightbotUser(req.headers['nightbot-user'] as string);
     const r=JSON.stringify(req.headers)
-
+      const response =`Your URL; ${headerUrl} ||  HEAD is: ${head.join('-')} `;
     res.status(200)
-      .send(
-        `You send ${query}-${body}`
-        );
+      .send(response.slice(0,399));
 }
       
