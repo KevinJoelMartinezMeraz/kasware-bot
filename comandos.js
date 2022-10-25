@@ -121,7 +121,7 @@ $(eval  var res="$(user) dejará este mundo el próximo "; const w=['Lunes','Mar
 // F_sub
 $(eval  var res="$(query) dejará este mundo el próximo "; const w=['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo']; const num="$(urlfetch https://beta.decapi.me/random/number/0/6)"; res+=w[num]+"😭😭😭"; res;)
 
-// !teCambio un semaforo
+// !tradeo
 $(eval
 var r = [
     'WOW tienes $(query)😍! Yo también',

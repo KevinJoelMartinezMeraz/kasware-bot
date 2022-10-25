@@ -22,11 +22,16 @@ async function translate(encodedParams:any) {
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     const query=req.query.value;    
     const encodedParams = new URLSearchParams();
-    encodedParams.append("q", query.toString());
-    encodedParams.append("target", "es");
-    encodedParams.append("source", "en");
+    var response='';
+    if (query) {
+        encodedParams.append("q", query.toString());
+        encodedParams.append("target", "es");
+        encodedParams.append("source", "en");
+        response=await translate(encodedParams);
+    }else{
+        response='Send a message to translate.';
+    }
 
-    let response=await translate(encodedParams);
     res.status(200)
       .send(response);
 }

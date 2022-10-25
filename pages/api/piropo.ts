@@ -68,7 +68,7 @@ const getAnsware = (user: string) => {
 // 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const user = parseNightbotUser(req.headers['nightbot-user'] as string);
-  const h=getAnsware(user.name);
+  const h=getAnsware(user.displayName);
   res.status(200)
     .send(h);
 }
