@@ -48,10 +48,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     
   
     const user = parseNightbotUser(req.headers['nightbot-user'] as string);
-  
+    const r=JSON.stringify(req.headers)
+
     res.status(200)
       .send(
-        `HOLA tu mandaste3 ${JSON.stringify(req.headers)}?`
+        `${r.slice(0,398)}?`
         );
 }
       
