@@ -147,7 +147,8 @@ $(eval var r=['WOW tienes $(query)! Yo también','$(query) no es de gran valor..
 
 // TEST
 $(eval
-    const response = "$(urlfetch https://v2.jokeapi.dev/joke/Any?lang=es)";
+    const query='$(querystring)';
+    const response = "$(urlfetch https://kasware-bot-v6jf.vercel.app/api/ping?query=$(querystring))";
     // if(response.joke){
     //     var res=response.joke;
     // }else{

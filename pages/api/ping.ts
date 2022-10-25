@@ -44,19 +44,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const query=parseMessage(
       req.headers['nightbot-response-url'] as string
     );
-    const resParam= Object.entries(req.headers['nightbot-response-url']);
-    const headerUrl=req.headers['nightbot-response-url'] as string;
-    // console.log("🚀 ~ file: ping.ts ~ URLSearchParams", )
+    
 
-    const head=Object.entries(req.headers)
-    // console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", req.headers)
+    const head=req.query.value
+    console.log("🚀 ~ file: ping.ts ~ line 37 ~ req", head)
     // console.log('[content-Type]',req.headers['content-type']);
     
-  
-    const user = parseNightbotUser(req.headers['nightbot-user'] as string);
-    const r=JSON.stringify(req.headers)
-      const response =`Your URL; ${headerUrl} ||  HEAD is: ${head.join('-')} `;
     res.status(200)
-      .send(response.slice(0,399));
+      .send('Tu mandaste '+head);
 }
       
