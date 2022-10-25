@@ -51,6 +51,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   const user = parseNightbotUser(req.headers['nightbot-user'] as string);
   const h=getHoroscopo();
   res.status(200)
-    .send(`El Horoscopo para ${user.displayName}; ${h}`);
+    .send(h);
 }
       
