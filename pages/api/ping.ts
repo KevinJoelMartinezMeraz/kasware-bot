@@ -30,6 +30,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const channel = parseNightbotChannel(
       req.headers['nightbot-channel'] as string
       );
+    const user = parseNightbotUser(
+      req.headers['nightbot-user'] as string
+      );
     const query=req.query.value;
 
     res.status(200)
