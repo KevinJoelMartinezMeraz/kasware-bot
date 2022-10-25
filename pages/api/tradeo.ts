@@ -33,7 +33,7 @@ const getAnsware = (user: string,channel: string,query: string) => {
     `${query} no es de gran valor...`,
     `Si no tienes nada mejor que ${query}`,
     `Enserio ${user}😑? Me estas intendando vender ${query}?`,
-    `OMG tienes ${query}🫣 Te lo cambio por 5 diamantes!!`,
+    `OMG tienes ${query}🫣 Te lo cambio por 5 diamantes💎💎💎💎💎!!`,
     `Siempre quise ${query}😍 Te daré un Tesla por ello`,
     `Mmm por ${query} te podría dar un pañal`,
     `Te cambio ${query} por 100$ DLS.`,
