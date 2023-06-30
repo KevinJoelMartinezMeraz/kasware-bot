@@ -16,6 +16,7 @@ async function translate(encodedParams:any) {
         data: encodedParams
         };
     const response = await axios.request(options);
+    // console.log("🚀 ~ file: translate_es.ts:19 ~ translate ~ response:", response)
     return response.data.data.translations[0].translatedText;
 }
 
@@ -31,6 +32,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     }else{
         response='Send a message to translate.';
     }
+    // console.log("🚀 ~ file: translate_es.ts:24 ~ query:", response)
 
     res.status(200)
       .send(response);
