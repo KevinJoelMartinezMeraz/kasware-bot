@@ -67,7 +67,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return;
       }
 
-      res.status(200).json({ success: true });
+      res.status(200).json({ success: true, msg:`${name} ahora estás acumulando puntos del canal👍` });
     });
   });
 }

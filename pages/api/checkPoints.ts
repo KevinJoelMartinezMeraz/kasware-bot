@@ -76,7 +76,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return;
       }
 
-      res.status(200).json({ success: true, earnedPoints });
+      res.status(200).json({ success: true, msg:"Puntos ganados: "+userDataList[userIndex].points+"pts." });
     });
   });
 }
