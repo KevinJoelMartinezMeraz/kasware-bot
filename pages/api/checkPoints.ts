@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Conectar a la base de datos MongoDB
     // @ts-ignore
-    const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     const db = client.db();
 
