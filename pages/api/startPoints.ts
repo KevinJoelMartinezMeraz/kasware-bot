@@ -1,73 +1,50 @@
 // api/savePoints.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import fs from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
 
 interface UserData {
+  _id: string; // ID único del usuario
   name: string;
   points: number;
-  lastUpdate: string; // Puede ser de tipo Date si se desea trabajar con fechas en JS
-  gaining: boolean; // Identifica si el usuario está generando puntos
+  lastUpdate: string;
+  gaining: boolean;
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const name = req.headers['user'] as string;
-  const lastUpdate = new Date().toISOString(); // Se obtiene la fecha actual en formato ISO
-  let points = 300;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { userId, userName } = req.body; // Recibir userId y userName del cuerpo de la solicitud
+  const lastUpdate = new Date().toISOString();
+  const points = 300;
   const gaining = true;
-  // Ruta al archivo JSON
-  const filePath = path.join(process.cwd(), 'public', 'points_data.json');
 
-  // Leer el archivo JSON
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err && err.code !== 'ENOENT') {
-      console.error('Error al leer el archivo JSON:', err);
-      res.status(500).json({ error: 'Error al leer el archivo JSON' });
-      return;
-    }
+  // Verificar si se recibieron userId y userName
+  if (!userId || !userName) {
+    res.status(400).json({ error: 'Falta userId o userName en el cuerpo de la solicitud' });
+    return;
+  }
 
-    let userDataList: UserData[] = [];
-    if (!err) {
-      try {
-        // Convertir el contenido del archivo JSON a un array de objetos
-        userDataList = JSON.parse(data);
-      } catch (error) {
-        console.error('Error al analizar el contenido JSON:', error);
-        res.status(500).json({ error: 'Error al analizar el contenido JSON' });
-        return;
-      }
-    }
+  try {
+    // Conectar a la base de datos MongoDB
+    const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    const db = client.db();
 
-    // Si userDataList no es un array, inicialízalo como un array vacío
-    if (!Array.isArray(userDataList)) {
-      userDataList = [];
-    }
+    // Verificar si el usuario ya existe en la base de datos
+    const existingUser = await db.collection<UserData>('users').findOne({ _id: userId });
 
-    // Buscar si el usuario ya existe en el archivo
-    const existingUserIndex = userDataList.findIndex((userData) => userData.name === name);
-
-    // Si el usuario ya existe
-    if (existingUserIndex !== -1) {
-      // Si el usuario no está ganando puntos actualmente, actualiza la fecha de la última actualización y establece gaining en true
-      if (!userDataList[existingUserIndex].gaining) {
-        userDataList[existingUserIndex].lastUpdate = lastUpdate;
-        userDataList[existingUserIndex].gaining = true;
+    if (existingUser) {
+      // Si el usuario ya existe y no está ganando puntos, actualizar la fecha de la última actualización y establecer gaining en true
+      if (!existingUser.gaining) {
+        await db.collection<UserData>('users').updateOne({ _id: userId }, { $set: { lastUpdate, gaining } });
       }
     } else {
-      // Si el usuario no existe, agregar un nuevo objeto con sus datos
-      userDataList.push({ name, points, lastUpdate, gaining });
+      // Si el usuario no existe, agregar un nuevo documento con sus datos
+      await db.collection<UserData>('users').insertOne({ _id: userId, name: userName, points, lastUpdate, gaining });
     }
 
-    // Escribir el archivo JSON actualizado
-    fs.writeFile(filePath, JSON.stringify(userDataList, null, 2), 'utf8', (err) => {
-      if (err) {
-        console.error('Error al escribir en el archivo JSON:', err);
-        res.status(500).json({ error: 'Error al escribir en el archivo JSON' });
-        return;
-      }
-
-      res.status(200).json({ success: true, msg:`${name} ahora estás acumulando puntos del canal👍` });
-    });
-  });
+    res.status(200).json({ success: true, msg: `${userName} ahora estás acumulando puntos del canal👍` });
+  } catch (error) {
+    console.error('Error al guardar los puntos en MongoDB:', error);
+    res.status(500).json({ error: 'Error al guardar los puntos en MongoDB' });
+  }
 }

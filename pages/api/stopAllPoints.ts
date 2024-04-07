@@ -1,59 +1,29 @@
 // api/stopGaining.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import fs from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
 
 interface UserData {
+  _id: string; // ID único del usuario
   name: string;
   points: number;
-  lastUpdate: string; // Puede ser de tipo Date si se desea trabajar con fechas en JS
-  gaining: boolean; // Identifica si el usuario está generando puntos
+  lastUpdate: string;
+  gaining: boolean;
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Ruta al archivo JSON
-  const filePath = path.join(process.cwd(), 'public', 'points_data.json');
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    // Conectar a la base de datos MongoDB
+    const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    const db = client.db();
 
-  // Leer el archivo JSON
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err && err.code !== 'ENOENT') {
-      console.error('Error al leer el archivo JSON:', err);
-      res.status(500).json({ error: 'Error al leer el archivo JSON' });
-      return;
-    }
+    // Establecer la propiedad gaining en false para todos los usuarios en la base de datos
+    await db.collection<UserData>('users').updateMany({}, { $set: { gaining: false } });
 
-    let userDataList: UserData[] = [];
-    if (!err) {
-      try {
-        // Convertir el contenido del archivo JSON a un array de objetos
-        userDataList = JSON.parse(data);
-      } catch (error) {
-        console.error('Error al analizar el contenido JSON:', error);
-        res.status(500).json({ error: 'Error al analizar el contenido JSON' });
-        return;
-      }
-    }
-
-    // Si userDataList no es un array, inicialízalo como un array vacío
-    if (!Array.isArray(userDataList)) {
-      userDataList = [];
-    }
-
-    // Establecer la propiedad gaining en false para todos los usuarios
-    userDataList.forEach((userData) => {
-      userData.gaining = false;
-    });
-
-    // Escribir el archivo JSON actualizado
-    fs.writeFile(filePath, JSON.stringify(userDataList, null, 2), 'utf8', (err) => {
-      if (err) {
-        console.error('Error al escribir en el archivo JSON:', err);
-        res.status(500).json({ error: 'Error al escribir en el archivo JSON' });
-        return;
-      }
-
-      res.status(200).json({ success: true });
-    });
-  });
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error al detener la ganancia en MongoDB:', error);
+    res.status(500).json({ error: 'Error al detener la ganancia en MongoDB' });
+  }
 }
