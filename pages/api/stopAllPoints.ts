@@ -1,10 +1,7 @@
-// api/stopGaining.ts
-
 import { NextApiRequest, NextApiResponse } from 'next';
-import { MongoClient } from 'mongodb';
+import { MongoClient, MongoClientOptions } from 'mongodb';
 
 interface UserData {
-  _id: string; // ID único del usuario
   name: string;
   points: number;
   lastUpdate: string;
@@ -14,6 +11,7 @@ interface UserData {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Conectar a la base de datos MongoDB
+    // @ts-ignore
     const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
     const db = client.db();
