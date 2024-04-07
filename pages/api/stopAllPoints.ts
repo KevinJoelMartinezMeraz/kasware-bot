@@ -9,10 +9,11 @@ interface UserData {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  let client: MongoClient | null = null; // Definir la variable client fuera del bloque try
+
   try {
     // Conectar a la base de datos MongoDB
-    // @ts-ignore
-    const client = new MongoClient(process.env.MONGODB_URI);
+    client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     const db = client.db();
 
@@ -23,5 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error('Error al detener la ganancia en MongoDB:', error);
     res.status(500).json({ error: 'Error al detener la ganancia en MongoDB' });
+  } finally {
+    // Asegurarse de cerrar la conexión después de usarla
+    await client.close();
   }
 }

@@ -1,5 +1,3 @@
-// api/subtractPoints.ts
-
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient } from 'mongodb';
 
@@ -16,10 +14,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const pointsToSubtract = parseInt(req.body.points as string); // Cambiar a req.body para recibir los parámetros
   const currentTime = new Date().getTime(); // Obtener el tiempo actual en milisegundos
 
+  let client: MongoClient;
+
   try {
     // Conectar a la base de datos MongoDB
-    // @ts-ignore
-    const client = new MongoClient(process.env.MONGODB_URI);
+    client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     const db = client.db();
 
@@ -50,5 +49,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error('Error al restar puntos en MongoDB:', error);
     res.status(500).json({ error: 'Error al restar puntos en MongoDB' });
+  } finally {
+    // Asegurarse de cerrar la conexión después de usarla
+    if (client) {
+      await client.close();
+    }
   }
 }
