@@ -1,24 +1,36 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient } from 'mongodb';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  let client: MongoClient | null = null;
+// URI de conexión a MongoDB
+const mongoURI = process.env.MONGODB_URI;
 
+// Función para conectar a MongoDB
+async function connectToMongoDB() {
   try {
-    // Conectar a la base de datos MongoDB
-    client = new MongoClient(process.env.MONGODB_URI);
+    const client = new MongoClient(mongoURI);
     await client.connect();
-
-    // Si la conexión se establece correctamente, responder con éxito
-    res.status(200).json({ success: true });
+    console.log('Conexión a MongoDB establecida correctamente');
+    return client;
   } catch (error) {
-    // Si hay un error al conectar, responder con un error
-    console.error('Error al conectar con MongoDB:', error);
-    res.status(500).json({ error: 'Error al conectar con MongoDB' });
-  } finally {
-    // Asegurarse de cerrar la conexión después de usarla
-    if (client) {
-      await client.close();
-    }
+    console.error('Error al conectar a MongoDB:', error);
+    throw error; // Propaga el error para que pueda ser manejado en otro lugar
   }
 }
+
+// Ejemplo de uso de la función connectToMongoDB
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+  try {
+    const dbClient = await connectToMongoDB();
+    console.log("🚀 ~ handler ~ dbClient:", dbClient)
+    // Realiza operaciones en la base de datos usando dbClient
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+    // Maneja el error de conexión a MongoDB
+    res.status(500).json({ Error: error });
+
+  }
+}
+
+
