@@ -18,23 +18,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .then(response => {
       // Manejar la respuesta aquí
       const array = response.data;
-      console.log("- ~ handler ~ response:", response)
 
-    // Filtrar los objetos con la propiedad "trovo" igual a 1
-    const filteredCommands = array.filter((command: any) => command.trovo === 1);
+      const formattedString = array
+      .filter((command: any) => command.trovo === 1) // Filtrar solo los elementos con command.trovo === 1
+      .sort((a: any, b: any) => a.price - b.price) // Ordenar los elementos de menor a mayor basado en command.price
+      .map((command: any) => `${command.cmd}__${command.price}`)
+      .join(", ");   
 
-    // Crear un nuevo array con las propiedades "cmd", "price" y "delay"
-    const resultArray = filteredCommands.map((command: any) => ({
-      cmd: command.cmd,
-      price: command.price,
-      delay: command.delay
-    }));
-    res.status(200).json({ success: true, result:resultArray });
-
+      res.status(200).json({ success: true, result:formattedString });
     })
     .catch(error => {
       console.error('Error:', error);
-      res.status(500).json({ Error: error });
+      res.status(500).json({ Params:{ cookieValueBody, cookieValueHeader}, ParamBody: req.body, ParamHeader:req.headers, Error: error });
 
     });
 
