@@ -1,18 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
-import fetch from 'node-fetch'; // Importar fetch para realizar la solicitud GET
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  var cookieValueBody: { cookie: any; };
+  var  cookieValueHeader: string;
   try {
-    const cookieValueBody = req.body.cookie as string; // Obtener el valor del parámetro Cookie desde el body
-    const cookieValueHeader = req.headers['cookie'] as string; // Obtener el valor del parámetro Cookie desde el body
-    const url = 'https://botrix.live//api/bot/commands';
-    //const cookieValueLocal = 'PHPSESSID=8vkbpd3do0gfnl54h4h7hqtddp; __cflb=0H28vfqCbGqPR2xdBTLKSacC9CsbqZNVQ7UPaZWoHf9; token=true; platform=youtube; premium=2';
+      cookieValueBody = JSON.parse(req.body) as { cookie: string }; // Convertir el cuerpo de la solicitud a un objeto
+      cookieValueHeader = req.headers['cookie'] as string; // Obtener el valor del parámetro Cookie desde el body
+      const url = 'https://botrix.live//api/bot/commands';
 
     await axios.get(url, {
       headers: {
-        'Cookie': cookieValueBody || cookieValueHeader // Configurar el encabezado Cookie con el valor de las cookies
+        'Cookie': cookieValueBody.cookie || cookieValueHeader // Configurar el encabezado Cookie con el valor de las cookies
       }
     })
     .then(response => {
@@ -25,11 +25,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .map((command: any) => `${command.cmd}__${command.price}`)
       .join(", ");   
 
-      res.status(200).json({ success: true, result:formattedString });
+      res.status(200).json({ success: true, result: formattedString });
     })
     .catch(error => {
       console.error('Error:', error);
-      res.status(500).json({ Params:{ cookieValueBody, cookieValueHeader}, ParamBody: req.body, ParamHeader:req.headers, Error: error });
+      res.status(500).json({ bodyParse:JSON.parse(req.body), ParamBodyLit: req.body, cookieValueBody: cookieValueBody, ParamHeader:req.headers, Error: error });
 
     });
 
