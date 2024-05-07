@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .map((command: any) => `${command.cmd}__${command.price}`)
       .join(", ");   
 
-      res.status(200).json({ success: true, result: formattedString });
+      res.status(200).send({ success: true, result: formattedString });
     })
     .catch(error => {
       console.error('Error:', error);
